@@ -34,7 +34,7 @@ now you can access the sadad lib like this:
 ```php
 use Sadad\Laravel\Facade\Sadad;
 
-$results = Zarinpal::request(
+$results = Sadad::request(
     "example.com/testVerify.php",          //required
     1000,                                  //required
     'YOUR_DATE'                            //required format=>m/d/Y g:i:s a
