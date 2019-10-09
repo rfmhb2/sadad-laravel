@@ -1,0 +1,30 @@
+{
+  "name": "rfmhb2/sadad-laravel",
+  "description": "laravel package for sadad gateway",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "mohammad hassan rezaie tabar",
+      "email": "mohammadhassanbolivand@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Sadad\\": "src/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Sadad\\Laravel\\SadadServiceProvider"
+      ],
+      "aliases": {
+        "Sadad": "Sadad\\Laravel\\Facade\\Sadad"
+      }
+    }
+  },
+  "require": {
+    "guzzlehttp/guzzle": "^6.3"
+  }
+}
