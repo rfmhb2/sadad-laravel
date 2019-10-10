@@ -36,6 +36,8 @@ class Sadad
      */
     public function request($ReturnUrl, $Amount, $dateTime)
     {
+        $OrderId = 1;
+        $SignData = $this->encrypt_pkcs7("$this->terminalId;$OrderId;$Amount", "$this->key");
         $inputs = [
             'TerminalId' => $this->terminalId,
             'MerchantId' => $this->merchantID,
@@ -46,11 +48,8 @@ class Sadad
             'OrderId' => $OrderId
         ];
         $results = $this->driver->request($inputs);
-        if (empty($results['Authority'])) {
-            $results['Authority'] = null;
-        }
-        if ($results->ResCode == 0) {
-            $this->token = $results->Token;
+        if ($results['Authority']) {
+            $this->token = $results['Authority'];
         }
         return $results;
     }
@@ -80,16 +79,13 @@ class Sadad
     public function encrypt_pkcs7($str, $key)
     {
         $key = base64_decode($key);
-        $block = mcrypt_get_block_size("tripledes", "ecb");
-        $pad = $block - (strlen($str) % $block);
-        $str .= str_repeat(chr($pad), $pad);
-        $ciphertext = mcrypt_encrypt("tripledes", $key, $str, "ecb");
+        $ciphertext = OpenSSL_encrypt($str, "DES-EDE3", $key, OPENSSL_RAW_DATA);
         return base64_encode($ciphertext);
     }
 
     public function redirect()
     {
-        header('Location: ' . sprintf($this->redirectUrl, $this->Authority));
+        header('Location: ' . sprintf($this->redirectUrl, $this->token));
         die;
     }
 

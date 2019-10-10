@@ -37,18 +37,16 @@ class RestDriver implements DriverInterface
      */
     private function restCall($uri, $data)
     {
-        try {
-            $client = new Client(['base_uri' => $this->baseUrl]);
-            $response = $client->request('POST', $uri, ['json' => $data]);
-
-            $rawBody = $response->getBody()->getContents();
-            $body = json_decode($rawBody, true);
-        } catch (RequestException $e) {
-            $response = $e->getResponse();
-            $rawBody = is_null($response) ? '{"Status":-98,"message":"http connection error"}' : $response->getBody()->getContents();
-            $body = json_decode($rawBody, true);
-        }
-        return $body;
+        $url = $this->baseUrl . $uri;
+        $data = json_encode($data);
+        $curl = curl_init($url);
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Content-Length: ' . strlen($data)]);
+        $result = curl_exec($curl);
+        curl_close($curl);
+        return $result;
     }
 
     /**
@@ -85,19 +83,4 @@ class RestDriver implements DriverInterface
         $this->baseUrl = $baseUrl;
     }
 
-    //Create sign data(Tripledes(ECB,PKCS7))
-
-
-//Send Data
-    function CallAPI($url, $data = false)
-    {
-        $curl = curl_init($url);
-        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Content-Length: ' . strlen($data)));
-        $result = curl_exec($curl);
-        curl_close($curl);
-        return $result;
-    }
 }
