@@ -2,8 +2,6 @@
 
 namespace Sadad\Drivers;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
 
 class RestDriver implements DriverInterface
 {
@@ -65,12 +63,11 @@ class RestDriver implements DriverInterface
                 'Status' => 'success',
                 'RefID' => $result,
             ];
-        } else {
-            return [
-                'Status' => 'error',
-                'error' => !empty($result['Status']) ? $result['Status'] : null
-            ];
         }
+        return [
+            'Status' => 'error',
+            'error' => !empty($result['Status']) ? $result['Status'] : null
+        ];
     }
 
     /**
