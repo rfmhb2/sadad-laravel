@@ -25,5 +25,8 @@
     }
   },
   "require": {
+    "ext-json": "*",
+    "ext-openssl": "*",
+    "ext-curl": "*"
   }
 }
