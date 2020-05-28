@@ -7,7 +7,7 @@ use Sadad\Drivers\RestDriver;
 
 class Sadad
 {
-    private $redirectUrl = 'https://sadad.shaparak.ir/VPG/Purchase?Token=%u';
+    private $redirectUrl = 'https://sadad.shaparak.ir/VPG/Purchase?Token=%s';
     private $merchantID;
     private $terminalId;
     private $key;
@@ -29,24 +29,36 @@ class Sadad
      * send request for money to sadad
      * and redirect if there was no error.
      *
-     * @param $ReturnUrl
-     * @param string $Amount
+     * @param $callbackURL
+     * @param $amount
      * @param $dateTime
+     * @param $orderId
+     * @param null $additionalData
+     * @param null $multiplexingData
      * @return array @redirect
+     * @internal param $ReturnUrl
+     * @internal param string $Amount
      */
-    public function request($ReturnUrl, $Amount, $dateTime)
+    public function request($callbackURL, $amount, $dateTime, $orderId, $additionalData = null, $multiplexingData = null)
     {
-        $OrderId = 1;
-        $SignData = $this->encrypt_pkcs7("$this->terminalId;$OrderId;$Amount", "$this->key");
+        $SignData = $this->encrypt_pkcs7("$this->terminalId;$orderId;$amount", "$this->key");
         $inputs = [
             'TerminalId' => $this->terminalId,
             'MerchantId' => $this->merchantID,
-            'Amount' => $Amount,
+            'Amount' => $amount,
             'SignData' => $SignData,
-            'ReturnUrl' => $ReturnUrl,
+            'ReturnUrl' => $callbackURL,
             'LocalDateTime' => $dateTime,
-            'OrderId' => $OrderId
+            'OrderId' => $orderId
         ];
+        if(!is_null($additionalData)){
+            $inputs['AdditionalData']=$additionalData;
+        }
+
+        if(!is_null($multiplexingData)){
+            $inputs['MultiplexingData']=$multiplexingData;
+        }
+
         $results = $this->driver->request($inputs);
         if ($results['Authority']) {
             $this->token = $results['Authority'];
@@ -85,7 +97,7 @@ class Sadad
 
     public function redirect()
     {
-        header('Location: ' . sprintf($this->redirectUrl, $this->token));
+        header('Location: ' . $this->redirectUrl());
         die;
     }
 
