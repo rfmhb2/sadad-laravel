@@ -61,11 +61,10 @@ class Sadad
 
         $results = $this->driver->request($inputs);
 
-        if (empty($results['Authority'])) {
-            return $results;
+        if (!empty($results['Authority'])) {
+            $this->token = $results['Authority'];
         }
 
-        $this->token = $results['Authority'];
         return $results;
     }
 
