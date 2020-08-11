@@ -51,18 +51,21 @@ class Sadad
             'LocalDateTime' => $dateTime,
             'OrderId' => $orderId
         ];
-        if(!is_null($additionalData)){
-            $inputs['AdditionalData']=$additionalData;
+        if (!is_null($additionalData)) {
+            $inputs['AdditionalData'] = $additionalData;
         }
 
-        if(!is_null($multiplexingData)){
-            $inputs['MultiplexingData']=$multiplexingData;
+        if (!is_null($multiplexingData)) {
+            $inputs['MultiplexingData'] = $multiplexingData;
         }
 
         $results = $this->driver->request($inputs);
-        if ($results['Authority']) {
-            $this->token = $results['Authority'];
+
+        if (empty($results['Authority'])) {
+            return $results;
         }
+
+        $this->token = $results['Authority'];
         return $results;
     }
 
