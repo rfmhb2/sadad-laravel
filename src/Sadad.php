@@ -80,8 +80,7 @@ class Sadad
     public function verify($token)
     {
         $verifyData = array('Token' => $token, 'SignData' => $this->encrypt_pkcs7($token, $this->key));
-        $str_data = json_encode($verifyData);
-        return $this->driver->verify($str_data);
+        return $this->driver->verify($verifyData);
     }
 
     /**

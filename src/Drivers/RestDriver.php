@@ -17,7 +17,7 @@ class RestDriver implements DriverInterface
     public function request($inputs)
     {
         $result = $this->restCall('Request/PaymentRequest', $inputs);
-        $result = json_decode($result,false);
+        $result = json_decode($result, false);
         if ($result->ResCode == 0) {
             return ['Authority' => $result->Token];
         } else {
