@@ -26,28 +26,6 @@ class RestDriver implements DriverInterface
     }
 
     /**
-     * request rest and return the response.
-     *
-     * @param $uri
-     * @param $data
-     *
-     * @return mixed
-     */
-    private function restCall($uri, $data)
-    {
-        $url = $this->baseUrl . $uri;
-        $data = json_encode($data);
-        $curl = curl_init($url);
-        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Content-Length: ' . strlen($data)]);
-        $result = curl_exec($curl);
-        curl_close($curl);
-        return $result;
-    }
-
-    /**
      * verify driver.
      *
      * @param $inputs
@@ -57,7 +35,7 @@ class RestDriver implements DriverInterface
     public function verify($inputs)
     {
         $result = $this->restCall('Advice/Verify', $inputs);
-
+        $result = json_decode($result, false);
         if ($result->ResCode == 0) {
             return [
                 'Status' => 'success',
@@ -79,5 +57,28 @@ class RestDriver implements DriverInterface
     {
         $this->baseUrl = $baseUrl;
     }
+
+    /**
+     * request rest and return the response.
+     *
+     * @param $uri
+     * @param $data
+     *
+     * @return mixed
+     */
+    private function restCall($uri, $data)
+    {
+        $url = $this->baseUrl . $uri;
+        $data = json_encode($data);
+        $curl = curl_init($url);
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Content-Length: ' . strlen($data)]);
+        $result = curl_exec($curl);
+        curl_close($curl);
+        return $result;
+    }
+
 
 }
