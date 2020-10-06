@@ -6,7 +6,7 @@ namespace Sadad\Drivers;
 class RestDriver implements DriverInterface
 {
     protected $baseUrl = 'https://sadad.shaparak.ir/vpg/api/v0/';
-    protected $baseUrl2 = 'https://sadad.shaparak.ir/vpg/api/v0/';
+
     /**
      * request driver.
      *
@@ -44,7 +44,7 @@ class RestDriver implements DriverInterface
         }
         return [
             'Status' => 'error',
-            'error' => !empty($result['Status']) ? $result['Status'] : null
+            'error' => !empty($result->Status) ? $result->Status : null
         ];
     }
 
