@@ -17,7 +17,7 @@ class RestDriver implements DriverInterface
     public function request($inputs)
     {
         $result = $this->restCall('Request/PaymentRequest', $inputs);
-        $result = json_decode($result, false);
+        $result = json_decode($result);
         if ($result->ResCode == 0) {
             return ['Authority' => $result->Token];
         } else {
@@ -35,7 +35,7 @@ class RestDriver implements DriverInterface
     public function verify($inputs)
     {
         $result = $this->restCall('Advice/Verify', $inputs);
-        $result = json_decode($result, false);
+        $result = json_decode($result);
         if ($result->ResCode == 0) {
             return [
                 'Status' => 'success',
